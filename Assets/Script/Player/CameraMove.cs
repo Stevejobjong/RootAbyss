@@ -26,12 +26,15 @@ public class CameraMove : MonoBehaviour {
 
         dirNormalized = realCamera.localPosition.normalized;
         finalDistance = realCamera.localPosition.magnitude;
+        sensitivity = DataMng.ins.settingValue.MouseSens;
     }
 
     void Update() {
-        sensitivity = SystemMng.ins.mouseSens;
-        if (SystemMng.ins.state == SystemMng.STATE.PAUSE)
+        if (SystemMng.ins.state == STATE.PAUSE)
+        {
+            sensitivity = DataMng.ins.settingValue.MouseSens;
             return;
+        }
         if (Player.ins.enemyLocked)
             return;
         rotX += -Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;

@@ -6,7 +6,7 @@ public class Tip : MonoBehaviour {
     [SerializeField] TMP_Text tipTxt;
 
     private void OnTriggerEnter(Collider other) {
-        if (other.tag == "Player" && SystemMng.ins.state == SystemMng.STATE.PLAY) {
+        if (other.tag == "Player" && SystemMng.ins.state == STATE.PLAY) {
             StopAllCoroutines();
             StartCoroutine(ShowTip());
         }

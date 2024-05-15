@@ -24,5 +24,4 @@ public class WalkState : StateMachineBehaviour {
             animator.SetTrigger("Idle");
         }
     }
-
 }

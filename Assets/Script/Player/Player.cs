@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Text;
 public class Player : Singleton<Player> {
     //public enum PLAYERSTATE { IDLE, ATTACK, ROLL }
     //public PLAYERSTATE state = PLAYERSTATE.IDLE;
@@ -43,18 +44,18 @@ public class Player : Singleton<Player> {
     public bool enemyLocked;
     Vector3 pos;
     float currentYOffset;
+    StringBuilder sb;
 
     void Start() {
         animator = GetComponent<Animator>();
         cam = Camera.main;
         characterController = GetComponent<CharacterController>();
+        sb = new StringBuilder();
     }
 
     void Update() {
 
-        hpText.text = hp + "/" + maxHp;
-
-        if (SystemMng.ins.state == SystemMng.STATE.PAUSE)
+        if (SystemMng.ins.state == STATE.PAUSE)
             return;
 
         hitDelay += Time.deltaTime;
@@ -81,15 +82,8 @@ public class Player : Singleton<Player> {
 
 
     private void Move() {
-        Vector3 f;
-        Vector3 r;
-        if (enemyLocked) {  //락온중 사용
-            f = transform.TransformDirection(Vector3.forward);
-            r = transform.TransformDirection(Vector3.right);
-        } else {            //평상시 사용
-            f = Vector3.Scale(cam.transform.forward, new Vector3(1, 0, 1));     // cam의 forward에서 y성분 제거
-            r = Vector3.Scale(cam.transform.right, new Vector3(1, 0, 1));       // cam의 right에서 y성분 제거
-        }
+        Vector3 f = Vector3.Scale(cam.transform.forward, new Vector3(1, 0, 1));     // cam의 forward에서 y성분 제거
+        Vector3 r = Vector3.Scale(cam.transform.right, new Vector3(1, 0, 1));       // cam의 right에서 y성분 제거
 
 
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -246,6 +240,7 @@ public class Player : Singleton<Player> {
                 hp -= damage;
                 hpBar.fillAmount = hp / maxHp;
                 if (hp <= 0) {
+                    hp = 0;
                     SystemMng.ins.StartCoroutine(SystemMng.ins.DieCoroutine());
                 }
                 knockbackDir = transform.position - other.transform.position;
@@ -255,12 +250,13 @@ public class Player : Singleton<Player> {
         }
     }
     private void OnTriggerStay(Collider other) {
-        if (other.tag == "Enemy" && !isRoll) {
+        if (other.CompareTag("Enemy") && !isRoll) {
             if (hitDelay > 1.0f) {
                 hitDelay = 0f;
                 hp -= 20;
                 hpBar.fillAmount = hp / maxHp;
                 if (hp <= 0) {
+                    hp = 0;
                     SystemMng.ins.StartCoroutine(SystemMng.ins.DieCoroutine());
                 }
                 knockbackDir = transform.position - other.transform.position;
@@ -304,6 +300,9 @@ public class Player : Singleton<Player> {
     }
     IEnumerator HitCoroutine() {
 
+        sb.Clear();
+        sb.Append(hp).Append('/').Append(maxHp);
+        hpText.text = sb.ToString();
         //knockbackDir = knockbackDir + new Vector3(0, 1, 0);
 
         characterController.Move(knockbackDir.normalized * 50 * Time.deltaTime);

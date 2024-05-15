@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 사운드를 관리하는 매니저 클래스
@@ -18,13 +19,20 @@ public class SoundMng : Singleton<SoundMng> {
         FileMng.ins.LoadFile(ref effects, "Sound/Effect/");
         FileMng.ins.LoadFile(ref backgrounds, "Sound/Background/");
 
-        SetBackgroundVolume(1.0f);
-        SetEffectVolume(1.0f);
-        PlayBackground("BattleBGM");
+    }
+    private void Start()
+    {
+        SetVolume();
+        Scene scene = SceneManager.GetActiveScene();
+        PlayBackground(scene.name);
     }
     private void Update() {
-        volume = SystemMng.ins.volume;
-        SetEffectVolume(volume); 
+        SetVolume();
+    }
+    void SetVolume()
+    {
+        volume = DataMng.ins.settingValue.Volume;
+        SetEffectVolume(volume);
         SetBackgroundVolume(volume);
     }
 

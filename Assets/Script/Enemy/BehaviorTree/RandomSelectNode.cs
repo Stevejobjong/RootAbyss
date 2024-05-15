@@ -11,21 +11,17 @@ public class RandomSelectNode : SelectNode {
     }
 
     public override INode.ENodeState Evaluate() {
-        int k = Random.Range(0, 2);
-        if (k==1) {
-            INode node = childrens[0];
-            childrens[0] = childrens[1];
-            childrens[1] = node;
-        }
-        /*
-        //childrens.Count 3이상일 경우
-        for (int i = childrens.Count - 1; i > 0; i--) {
-            int k = Random.Range(0, i);
+
+        //shuffle
+        for (int i = childrens.Count - 1; i > 0; i--)
+        {
+            int k = Random.Range(0, childrens.Count);
             INode node = childrens[i];
             childrens[i] = childrens[k];
             childrens[k] = node;
         }
-        */
+
         return base.Evaluate();
     }
+
 }

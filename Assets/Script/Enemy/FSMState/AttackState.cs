@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackState : StateMachineBehaviour {
-    Enemy enemy;
     float CoolTime = 0f;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         Debug.Log("АјАн");

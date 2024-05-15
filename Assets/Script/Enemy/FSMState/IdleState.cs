@@ -14,7 +14,7 @@ public class IdleState : StateMachineBehaviour {
         if (enemy.isDead)
             return;
         CoolTime += Time.deltaTime;
-        if (Vector3.Distance(animator.transform.position, Player.ins.transform.position) < 1 && CoolTime > 1.0f) {
+        if (Vector3.Distance(animator.transform.position, Player.ins.transform.position) < 1 && CoolTime > 1.0f && !enemy.isDead) {
             CoolTime = 0f;
             enemy.Stop();
             animator.SetTrigger("Attack");

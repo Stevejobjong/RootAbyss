@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour {
     }
 
     void Update() {
-        if (SystemMng.ins.state == SystemMng.STATE.PAUSE && gameObject.activeSelf) {
+        if (SystemMng.ins.state == STATE.PAUSE && gameObject.activeSelf) {
             Stop();
             return;
         }
@@ -37,11 +37,14 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    public void SetDestination() {
-        agent.SetDestination(Player.ins.transform.position);
+    public void SetDestination()
+    {
+        if (!isDead)
+            agent.SetDestination(Player.ins.transform.position);
     }
     public void Stop() {
-        agent.ResetPath();
+        if(!isDead)
+            agent.ResetPath();
     }
     public void Detect() {
         Vector3 d = Player.ins.transform.position;
